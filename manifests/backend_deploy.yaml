@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi_backend
+  labels:
+    app: fastapi_backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi_backend
+  template:
+    metadata:
+      labels:
+        app: fastapi_backend
+    spec:
+      containers:
+      - name: fastapi_backend
+        image: kaydee647/fastapi_backend
+        ports:
+        - containerPort: 8000
+        envFrom:
+          - configMapRef:
+            name: fastapi_backend-configmap
+          - secretRef:
+            name: fastapi_backend-secret
