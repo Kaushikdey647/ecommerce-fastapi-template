@@ -17,6 +17,17 @@ def get_user_by_id(db: Session, user_id: int):
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
+def create_user(db: Session, user: schema.UserCreate):
+    db_user = models.User(**user.dict())
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def delete_user(db: Session, user_id: int):
+    db.query(models.User).filter(models.User.user_id == user_id).delete()
+    db.commit()
+
 # PRODUCT
 
 def get_product_list(db: Session, skip: int = 0, limit: int = 100):
@@ -24,6 +35,17 @@ def get_product_list(db: Session, skip: int = 0, limit: int = 100):
 
 def get_product_by_id(db: Session, product_id: int):
     return db.query(models.Product).filter(models.Product.product_id == product_id).first()
+
+def add_product(db: Session, product: schema.ProductCreate):
+    db_product = models.Product(**product.dict())
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+def delete_product(db: Session, product_id: int):
+    db.query(models.Product).filter(models.Product.product_id == product_id).delete()
+    db.commit()
 
 # CART
 
@@ -45,6 +67,9 @@ def create_order(db: Session, order: schema.OrderCreate):
     db.commit()
     db.refresh(db_order)
     return db_order
+
+def get_orders_list(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Order).offset(skip).limit(limit).all()
 
 def get_orders_by_user_id(db: Session, user_id: int):
     return db.query(models.Order).filter(models.Order.user_id == user_id).all()

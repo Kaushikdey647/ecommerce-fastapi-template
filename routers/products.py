@@ -38,4 +38,4 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db_product = crud.get_product_by_id(db, product_id=product_id)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
-    return crud.delete_product(db=db, product=db_product)
+    return crud.delete_product(db=db, product_id=product_id)
